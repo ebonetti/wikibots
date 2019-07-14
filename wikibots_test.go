@@ -15,9 +15,13 @@ func TestUnit(t *testing.T) {
 	case itErr != nil:
 		t.Error("New returns the following error", itErr)
 	}
-	enName := enID2Name[enID]
-	itName := itID2Name[itID]
+	enName, enOk := enID2Name(enID)
+	itName, itOk := itID2Name(itID)
 	switch {
+	case !enOk:
+		t.Error("Bot ", name, " not found in the english version")
+	case !itOk:
+		t.Error("Bot ", name, " not found in the italian version")
 	case enName != name:
 		t.Error("New returns info for", enID, "expecting ", name, " found ", enName)
 	case itName != name:

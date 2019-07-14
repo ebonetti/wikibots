@@ -9,23 +9,33 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
 
-	"github.com/ebonetti/wikibots/internal/botnames"
 	"github.com/pkg/errors"
 )
 
-//New returns a map ID to name of Wikipedia bots
-func New(ctx context.Context, lang string) (ID2bot map[uint32]string, err error) {
-	bots, err := botnames.New()
+//New returns a functions that maps ID to the name of Wikipedia bots
+func New(ctx context.Context, lang string) (ID2Bot func(uint32) (string, bool), err error) {
+	untypedID2Bot, ok := lang2UserID2User.Load(lang)
+	if ok {
+		return untypedID2Bot.(func(uint32) (string, bool)), nil
+	}
+
+	userID2User, err := users(ctx, lang)
 	if err != nil {
 		return
 	}
 
-	return users(ctx, bots, lang)
+	untypedID2Bot, _ = lang2UserID2User.LoadOrStore(lang, func(ID uint32) (name string, ok bool) { name, ok = userID2User[ID]; return })
+
+	return untypedID2Bot.(func(uint32) (string, bool)), nil
 }
 
-func users(ctx context.Context, usernames []string, lang string) (userID2User map[uint32]string, err error) {
+//lang2UserID2User represents UserID2User cache by language
+var lang2UserID2User sync.Map
+
+func users(ctx context.Context, lang string) (userID2User map[uint32]string, err error) {
 	userID2User = make(map[uint32]string, len(usernames))
 
 	for _, query := range toURL(usernames, lang) {
