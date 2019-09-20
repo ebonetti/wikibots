@@ -1,10 +1,10 @@
 wikibots
 ========
 
-[![GoDoc Reference](https://godoc.org/github.com/ebonetti/wikibots?status.svg)](http://godoc.org/github.com/ebonetti/wikibots)
-[![Build Status](https://travis-ci.org/ebonetti/wikibots.svg?branch=master)](https://travis-ci.org/ebonetti/wikibots)
-[![Coverage Status](https://coveralls.io/repos/ebonetti/wikibots/badge.svg?branch=master)](https://coveralls.io/r/ebonetti/wikibots?branch=master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/ebonetti/wikibots)](https://goreportcard.com/report/github.com/ebonetti/wikibots)
+[![GoDoc Reference](https://godoc.org/github.com/negapedia/wikibots?status.svg)](http://godoc.org/github.com/negapedia/wikibots)
+[![Build Status](https://travis-ci.org/negapedia/wikibots.svg?branch=master)](https://travis-ci.org/negapedia/wikibots)
+[![Coverage Status](https://coveralls.io/repos/negapedia/wikibots/badge.svg?branch=master)](https://coveralls.io/r/negapedia/wikibots?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/negapedia/wikibots)](https://goreportcard.com/report/github.com/negapedia/wikibots)
 
 Description
 -----------
@@ -16,8 +16,8 @@ Installation
 
 This package can be installed with the go get command:
 
-    go get github.com/ebonetti/wikibots
+    go get github.com/negapedia/wikibots
 
 Documentation
 -------------
-API documentation can be found in the [associated godoc reference](https://godoc.org/github.com/ebonetti/wikibots)
+API documentation can be found in the [associated godoc reference](https://godoc.org/github.com/negapedia/wikibots)
