@@ -1,39 +1,20 @@
-sudo: required
-#modified from https://gist.github.com/y0ssar1an/df2dab474520c4086926f672c52db139
+dist: trusty
+
 language: go
 
-# Only the last two Go releases are supported by the Go team with security
-# updates. Any versions older than that should be considered deprecated.
-# Don't bother testing with them. tip builds your code with the latest
-# development version of Go. This can warn you that your code will break
-# in the next version of Go. Don't worry! Later we declare that test runs
-# are allowed to fail on Go tip.
 go:
-  - "1.10"
+  - 1.13
   - master
 
-matrix:
-  # It's ok if our code fails on unstable development versions of Go.
-  allow_failures:
-    - go: master
-  # Don't wait for tip tests to finish. Mark the test run green if the
-  # tests pass on the stable versions of Go.
-  fast_finish: true
-
-# Don't email me the results of the test runs.
 notifications:
   email: false
 
-# Anything in before_script that returns a nonzero exit code will
-# flunk the build and immediately stop. It's sorta like having
-# set -e enabled in bash.
-before_script:
-  - go get honnef.co/go/tools/cmd/megacheck                     # Badass static analyzer/linter
-  - go get github.com/mattn/goveralls
+addons:
+  sonarcloud:
+    organization: "negapedia"
+    token:
+      secure: "Dm2VMid3H++Eih9p/1lwTNkY8OokdGrM55VpOv0UZds51XTeDxoKeWs0C5y4eBnQ8/LzEWJ4mCYVNnethLObtsoJsHspbvaQ/cKg1601cKXEel0PE64d+ZVYNhdqtfZtRTRX+t9c4AzgT9bE1ZjlkDY2NuDS1Gcm4wzM0qei2K/kPNdR5fOkneaW7A4Cfd516kAzESpbkvsl3SerRWZgX7UtfdVlAG56+UQg4nE5EHawyuCz0vM4uZNXDuRAb5SXS3Ngclh32mkdNZUE6XnOnxDH/qQb+UrR3oO1mlK+pTBtW5cqFSq0tqh9jk7umSRufjTTNMpPgz0lh5W6z7ydb9dJnKeWqc+f9lQ0c/265cbzYdPPKG0uIQYuEgJsbiV8FC3gz9pwN8Nd0I/Rrq5pQfrGKvXY0BeEneFLB/JHs6B42m1im7qGAuOMzrVDPuIqjk62+i7OAU7VmTB12ooVHvAxLKJOAECAAn8KSBoVmFZu0WatujBcnXdm8N64Tfvy+e/ReI20cVhG2QivGkdXEA5Ukc7o+fu6KvDmJpVzxwbqKfoAelbWo/SNIgQxCoyGqlkrjNspVEq+igHLge4FeUYZ46NOW711Lg8+rB6Gjg+XK5a8UmIQQqN6adLHAAbXw1x30Fn2MFKJ3H+22XOqMmCHSvRUKCX8pFea2TtYq88="
 
-# script always run to completion (set +e). All of these code checks are must haves
-# in a modern Go project.
 script:
-  - go test -v -race ./...                   # Run all the tests with the race detector enabled
-  - megacheck ./...                          # "go vet on steroids" + linter
-  - goveralls
+  - go test -race ./... -coverprofile=coverage.out
+  - sonar-scanner -Dsonar.projectKey=negapedia_wikibots -Dsonar.projectName=wikibots -Dsonar.projectVersion=1.0 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/*_test.go -Dsonar.go.coverage.reportPaths=coverage.out
